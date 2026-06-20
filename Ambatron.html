@@ -4755,13 +4755,8 @@
     const MAX_ATTEMPTS = 3;
     let loginLocked = false;
 
-    // Pre-fill remembered name
+    // Pre-fill remembered name (disabled — credentials tidak disimpan)
     document.addEventListener('DOMContentLoaded', () => {
-      const saved = localStorage.getItem('ambatron_operator');
-      if (saved) {
-        const ni = document.getElementById('loginNameInput');
-        if (ni) ni.value = saved;
-      }
       renderAchievements();
     });
 
@@ -5020,8 +5015,8 @@
     // ----------------------------------------------
     // SETTINGS: CHANGE PASSWORD
     // ----------------------------------------------
-    let currentUsername = localStorage.getItem('ambatron_user') || 'admin';
-    let currentPassword = localStorage.getItem('ambatron_pass') || 'admin';
+    let currentUsername = 'admin';
+    let currentPassword = 'admin';
 
     function changePassword() {
       const old = document.getElementById('settOldPass').value;
@@ -5041,7 +5036,6 @@
         return;
       }
       currentPassword = nw;
-      localStorage.setItem('ambatron_pass', nw);
       document.getElementById('settOldPass').value = '';
       document.getElementById('settNewPass').value = '';
       document.getElementById('settConfPass').value = '';
@@ -5148,8 +5142,6 @@
         return;
       }
       loginAttempts = 0;
-      // Remember name
-      localStorage.setItem('ambatron_operator', name);
       // Show ACCESS GRANTED
       document.getElementById('loginBtn').disabled = true;
       document.getElementById('accessGranted').classList.add('show');
