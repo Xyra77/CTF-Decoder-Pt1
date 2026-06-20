@@ -2708,14 +2708,14 @@
 
     <!-- Login form -->
     <div class="login-form" id="loginForm" style="display:block">
-      <div class="login-label">operator identity</div>
+      <div class="login-label">username</div>
       <div class="login-input-wrap">
         <span class="login-prefix">▶</span>
-        <input class="login-input" id="loginNameInput" type="text" placeholder="masukkan nama operator..."
+        <input class="login-input" id="loginNameInput" type="text" placeholder="masukkan username..."
           maxlength="24" autocomplete="off" spellcheck="false"
           style="pointer-events:auto;position:relative;z-index:999999">
       </div>
-      <div class="login-label" style="margin-top:.5rem">access code</div>
+      <div class="login-label" style="margin-top:.5rem">password</div>
       <div class="login-input-wrap">
         <span class="login-prefix">▶</span>
         <input class="login-input" id="loginPassInput" type="password" placeholder="••••••••" maxlength="32"
@@ -4568,7 +4568,7 @@
     function doLogin() {
       const name = document.getElementById('loginNameInput').value.trim();
       const pass = document.getElementById('loginPassInput').value;
-      const CORRECT_PASS = 'ambatukam';
+      const CORRECT_PASS = 'admin';
 
       if (!name) {
         const ni = document.getElementById('loginNameInput');
@@ -5020,7 +5020,8 @@
     // ----------------------------------------------
     // SETTINGS: CHANGE PASSWORD
     // ----------------------------------------------
-    let currentPassword = localStorage.getItem('ambatron_pass') || 'ambatukam';
+    let currentUsername = localStorage.getItem('ambatron_user') || 'admin';
+    let currentPassword = localStorage.getItem('ambatron_pass') || 'admin';
 
     function changePassword() {
       const old = document.getElementById('settOldPass').value;
@@ -5116,6 +5117,7 @@
       if (loginLocked) { toast('Terlalu banyak percobaan! Tunggu sebentar.', 'error', 3000); return; }
       const name = document.getElementById('loginNameInput').value.trim();
       const pass = document.getElementById('loginPassInput').value;
+      const CORRECT_USER = currentUsername;
       const CORRECT = currentPassword;
       if (!name) {
         const ni = document.getElementById('loginNameInput');
@@ -5129,17 +5131,19 @@
         setTimeout(() => { pi.style.borderColor = ''; pi.style.boxShadow = ''; pi.placeholder = '••••••••'; }, 1500);
         return;
       }
-      if (pass !== CORRECT) {
+      if (name.toLowerCase() !== CORRECT_USER.toLowerCase() || pass !== CORRECT) {
         loginAttempts++;
         const rem = MAX_ATTEMPTS - loginAttempts;
+        const ni = document.getElementById('loginNameInput');
         const pi = document.getElementById('loginPassInput');
+        ni.style.borderColor = 'rgba(255,45,120,.8)'; ni.style.boxShadow = '0 0 12px rgba(255,45,120,.4)';
         pi.style.borderColor = 'rgba(255,45,120,.8)'; pi.style.boxShadow = '0 0 12px rgba(255,45,120,.4)'; pi.value = '';
         pi.placeholder = rem > 0 ? `salah! ${rem}x lagi` : 'LOCKED — tunggu 30 detik';
         if (rem <= 0) {
           loginLocked = true;
-          setTimeout(() => { loginLocked = false; loginAttempts = 0; pi.placeholder = '••••••••'; pi.style.borderColor = ''; pi.style.boxShadow = ''; }, 30000);
+          setTimeout(() => { loginLocked = false; loginAttempts = 0; pi.placeholder = '••••••••'; ni.style.borderColor = ''; ni.style.boxShadow = ''; pi.style.borderColor = ''; pi.style.boxShadow = ''; }, 30000);
         } else {
-          setTimeout(() => { pi.style.borderColor = ''; pi.style.boxShadow = ''; pi.placeholder = '••••••••'; }, 1500);
+          setTimeout(() => { ni.style.borderColor = ''; ni.style.boxShadow = ''; pi.style.borderColor = ''; pi.style.boxShadow = ''; pi.placeholder = '••••••••'; }, 1500);
         }
         return;
       }
